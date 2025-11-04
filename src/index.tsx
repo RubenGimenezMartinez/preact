@@ -1,41 +1,48 @@
-import { hydrate, prerender as ssr } from "preact-iso";
+import {
+  hydrate,
+  prerender as ssr,
+  Router,
+  Route,
+  LocationProvider,
+} from "preact-iso";
 
 import preactLogo from "./assets/preact.svg";
 import "./style.css";
 
+import Home from "./pages/Home.jsx";
+import Tareas from "./pages/tareas/index.jsx";
 import { signal } from "@preact/signals";
-
-const counter = signal(10);
+// Estado global de tareas
+export const tareas = signal([
+  { id: 1, texto: "Aprender Preact", completada: false },
+  { id: 2, texto: "Crear rutas", completada: true },
+]);
 
 export function App() {
-  const increase = () => {
-    counter.value++;
-  };
-  const decrease = () => {
-    counter.value--;
-  };
-
   return (
-    <div>
+    <LocationProvider>
       <div>
-        <h1>Hola mundo desde Preact!</h1>
-        <span>Contador: {counter.value}</span>
-      </div>
-      <div style={{ display: "flex", gap: "8px", justifyContent: "center" }}>
-        <button
-          style={{ width: "30px", fontSize: "1.5rem" }}
-          onClick={increase}
+        <nav
+          style={{
+            display: "flex",
+            gap: "16px",
+            marginBottom: "24px",
+            justifyContent: "center",
+          }}
         >
-          +
-        </button>
-        <button
-          style={{ width: "30px", fontSize: "1.5rem" }}
-          onClick={decrease}
-        >
-          -
-        </button>
+          <a href="/" data-link>
+            Home
+          </a>
+          <a href="/tareas" data-link>
+            Tareas
+          </a>
+        </nav>
+        <Router>
+          <Route path="/" component={Home} />
+          <Route path="/tareas" component={Tareas} />
+        </Router>
       </div>
-    </div>
+    </LocationProvider>
   );
 }
 
